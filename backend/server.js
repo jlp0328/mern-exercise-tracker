@@ -6,15 +6,19 @@ require('dotenv').config();
 
 const app = express();
 const port = process.env.PORT || 5000;
+const url = 'mongodb://127.0.0.1:27017/test';
 
 app.use(cors());
 app.use(express.json());
 
-const uri = process.env.ATLAS_URI;
-mongoose.connect(uri, { useNewUrlParser: true, useCreateIndex: true });
+mongoose.connect(url, { useNewUrlParser: true, useCreateIndex: true });
 const connection = mongoose.connection;
 connection.once('open', () => {
 	console.log('MongoDB database connection established successfully');
+});
+
+connection.on('error', err => {
+	console.error('Error: ', err);
 });
 
 const exercisesRouter = require('./routes/exercises');
